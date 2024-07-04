@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% for request in re %}
+<div class="d-flex justify-content-between">
+<p>{{ request.from_user }}</p>
+<a href="{% url "home:user_accept" request.from_user.id %}" class="btn btn-info" >Accept</a>
+</div>
+{% endfor %}
+{% endblock content %}
