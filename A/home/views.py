@@ -2,9 +2,9 @@ from typing import Any
 from django.http import HttpRequest
 from django.shortcuts import render , get_object_or_404,redirect
 from django.views import View
-from home.models import Post,Vote,SaveMessage,UserMessage,Relations,UserRequest
+from .models import Post,Vote,SaveMessage,UserMessage,Relations,UserRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
-from home.forms import AddPostForm,EditPostForm
+from .forms import AddPostForm,EditPostForm
 from django.contrib import messages
 from accounts.models import User
 from django.utils.text import slugify
@@ -15,7 +15,7 @@ from utils import user_like
 
 class HomeView(LoginRequiredMixin,View):
     def get(self,request):
-        posts =Post.objects.all()
+        posts =Post.objects.filter(user__privet=False,) | Post.objects.filter(user__following__from_user=request.user) | Post.objects.filter(user=request.user)
         can_like = None
         if request.user.is_authenticated :
             can_like =user_like(request.user)
@@ -42,7 +42,7 @@ class UserAddPost(LoginRequiredMixin,View) :
     
 class PostDetailView(LoginRequiredMixin,View):
     def setup(self,request,*args, **kwargs):
-        self.post_instance = Post.objects.get(pk=kwargs['post_id'],slug=kwargs['post_slug'])
+        self.post_instance = get_object_or_404(Post,pk=kwargs['post_id'],slug=kwargs['post_slug'])
         return super().setup(request,*args, **kwargs)
     
     def get(self,request,*args, **kwargs):
@@ -69,7 +69,13 @@ class PostEditView(LoginRequiredMixin,View):
             new_form.save()
             messages.success(request , 'Update post','success')
             return redirect('home:post_detail' , self.post_instance.id)
-        
+
+class DeletePostView(LoginRequiredMixin,View):
+    def get(self,request,*args,**kwargs):
+        post = get_object_or_404(Post , pk=kwargs['post_id'])
+        post.delete()
+        messages.success(request,'post Deleted successfully','danger')
+        return redirect('home:home')
 class LikePostView(LoginRequiredMixin,View):
     def get(self,request,*args, **kwargs):
         post = Post.objects.get(pk=kwargs['post_id'])
@@ -162,4 +168,3 @@ class UserAcceptView(LoginRequiredMixin,View):
         else:
             messages.error(request,'error','danger')
         return redirect('home:requests',user.id)
-        

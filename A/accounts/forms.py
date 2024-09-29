@@ -31,15 +31,14 @@ class UserChangeForm(forms.ModelForm):
         
 
 class UserRegistertionForm(forms.Form):
-    profile = forms.ImageField(required=False)
-    username = forms.CharField()
-    # bio = forms.CharField()
-    full_name = forms.CharField()
-    email = forms.EmailField()
-    birthday = forms.DateField()
-    password1 = forms.CharField(label='password',widget=forms.PasswordInput)
-    password2 = forms.CharField(label='confirm password',widget=forms.PasswordInput)
-    
+    profile = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    full_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    birthday = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
+    password1 = forms.CharField(label='password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(label='confirm password', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
     def clean(self) :
         cd = super().clean()
         p1 = cd.get('password1')
@@ -56,8 +55,8 @@ class UserRegistertionForm(forms.Form):
         return email
         
 class UserLoginForm(forms.Form):
-    username = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"Username"}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder":"Password"}))
+    username = forms.CharField(widget=forms.TextInput())
+    password = forms.CharField(widget=forms.PasswordInput())
     
 class UserEditProfileForm(forms.ModelForm):
     class Meta:

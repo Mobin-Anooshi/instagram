@@ -1,0 +1,16 @@
+/* استایل برای تنظیم تصاویر */
+.post-image-container {
+    width: 100%; /* تصویر عرض کامل ستون را می‌پوشاند */
+    padding-bottom: 100%; /* نسبت 1:1 برای ساخت مربعی مثل اینستاگرام */
+    position: relative;
+    overflow: hidden;
+}
+
+.post-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* تصویر را بدون کشیدگی داخل قاب قرار می‌دهد */
+}

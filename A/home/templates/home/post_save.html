@@ -1,8 +1,20 @@
 {% extends "base.html" %}
+{% load static %}
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'home/css/saveS.css' %}">
+{% endblock extra_headers %}
 {% block content %}
-{% for post in posts %}
-    <a href="{% url "home:post_detail" post.post.id post.post.slug %}"><img src="{{ post.post.image.url }}" class="m-2" alt="..." width="300" height="300"></a>
-{% endfor %}
-
-
+<div class="container">
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="post-item">
+                <a href="{% url 'home:post_detail' post.post.id post.post.slug %}">
+                    <img src="{{ post.post.image.url }}" class="fixed-size-image m-2" alt="{{ post.post.title }}">
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock content %}

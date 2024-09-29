@@ -4,117 +4,103 @@
 <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}">
 {% endblock extra_headers %}
 
-
 {% block content %}
-<div class="profile" style="display:inline-block;">
-    <img src="{{ user.profile.url }}" alt="تصویر پروفایل" width="150" height="150">
-</div>
-<div >
-    <p>{{ user.full_name }}</p>
+<div class="container my-4">
+    <div class="row justify-content-center align-items-center">
+        <!-- تصویر پروفایل و نام کاربر -->
+        <div class="col-12 col-md-4 text-center mb-3">
+            <img src="{{ user.profile.url }}" alt="تصویر پروفایل" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+            <h4 class="mt-2">{{ user.full_name }}</h4>
 
-</div>
-{% if request.user.id == user.id %}
-<a class="btn btn-info" href="{% url "accounts:edit_profile" %}"  > Edit</a>
-<a class="btn btn-info" href="{% url "home:save_post" %}"  > Save posts</a>
-<a class="btn btn-info" href="{% url "home:requests" user.id %}"  > Requets</a>
-{% else %}
-
-{% if user.privet == False %}
-{% if is_follow  %}
-<a href="{% url "home:user_relations" user.id %} " class="btn btn-danger"> UnFollow</a>
-{% else %}
-<a href="{% url "home:user_relations" user.id %} " class="btn btn-info"> Follow</a>
-{% endif %}
-{% endif %}
-{% endif %}
-
-
-
-
-<!-- Followers -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Followers{{ user.folowingcount }}
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            {% if request.user.id == user.id %}
+            <a class="btn btn-outline-primary btn-sm my-2 w-100" href="{% url "accounts:edit_profile" %}">Edit Profile</a>
+            <a class="btn btn-outline-secondary btn-sm my-2 w-100" href="{% url "home:save_post" %}">Saved Posts</a>
+            <a class="btn btn-outline-secondary btn-sm my-2 w-100" href="{% url "home:requests" user.id %}">Requests</a>
+            {% endif %}
         </div>
-        {% for rel in followers %}
-        <div class="modal-body">
-          {{ rel.from_user }}
+
+        <!-- دکمه‌های دنبال‌کننده‌ها و دنبال‌شونده‌ها -->
+        <div class="col-12 col-md-8 text-center">
+            <div class="d-flex flex-wrap justify-content-center">
+                <button class="btn btn-primary mx-2 mb-2" data-bs-toggle="modal" data-bs-target="#followersModal">Followers: {{ user.folowingcount }}</button>
+                <button class="btn btn-primary mx-2 mb-2" data-bs-toggle="modal" data-bs-target="#followingModal">Following: {{ user.folowerscount }}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- دکمه Follow / Unfollow -->
+    <div class="row justify-content-center">
+        <div class="col-12 text-center my-3">
+            {% if request.user.id != user.id %}
+                {% if user.privet %}
+                    {% if is_follow %}
+                    <a href="{% url "home:user_relations" user.id %}" class="btn btn-danger">UnFollow</a>
+                    {% else %}
+                    {% if is_request %}
+                    <a href="{% url "home:user_request" user.id %}" class="btn btn-info">Request</a>
+                    {% else %}
+                    <a href="{% url "home:user_request" user.id %}" class="btn btn-info">Follow</a>
+                    {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- نمایش پست‌ها -->
+    <div class="row">
+        {% if request.user.id == user.id or user.privet == False or is_follow %}
+        {% for post in posts %}
+        <div class="col-6 col-md-4 col-lg-3 mb-3">
+            <a href="{% url "home:post_detail" post.id post.slug %}">
+                <img src="{{ post.image.url }}" class="img-fluid img-thumbnail" alt="Post Image" style="width:100%; height:300px; object-fit:cover;">
+            </a>
         </div>
         {% endfor %}
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
+        {% else %}
+        <p class="text-center">This account is private.</p>
+        {% endif %}
     </div>
-  </div>
-
-
-<!-- Following-->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModall">
-    Following{{ user.folowerscount }}
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModall" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        {% for rell in following %}
-        <div class="modal-body">
-          {{ rell.to_user }}
-        </div>
-        {% endfor %}
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-{% if request.user.id != user.id %}
-{% if user.privet %}
-{% if is_follow %}
-<a href="{% url "home:user_relations" user.id %} " class="btn btn-danger"> UnFollow</a>
-{% else %}
-{% if is_request %}
-<a href="{% url "home:user_request" user.id %} " class="btn btn-info"> Request</a>
-{% else %}
-<a href="{% url "home:user_request" user.id %} " class="btn btn-info"> Follow</a>
-{% endif %}
-{% endif %}
-{% endif %}
-{% endif %}
-
-
-
-
-<div class="d-flex justify-content-start">
-{% comment %} {% if user.privet %}
-<a href="{% url "home:post_detail" post.id post.slug %}"><img src="{{ post.image.url }}" class="m-2" alt="..." width="300" height="300"></a>
-{% else %} {% endcomment %}
-{% if request.user.id == user.id or user.privet == False or is_follow %}
-  {% for post in posts %}
-    <a href="{% url "home:post_detail" post.id post.slug %}"><img src="{{ post.image.url }}" class="m-2" alt="..." width="300" height="300"></a>
-    {% endfor %}
-{% else %}
-  <p>Privet</p>
-{% endif %}
 </div>
 
+<!-- Modal Followers -->
+<div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="followersModalLabel">Followers</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% for rel in followers %}
+                <p>{{ rel.from_user }}</p>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-
+<!-- Modal Following -->
+<div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="followingModalLabel">Following</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% for rell in following %}
+                <p>{{ rell.to_user }}</p>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

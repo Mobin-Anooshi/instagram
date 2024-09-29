@@ -1,42 +1,55 @@
 {% extends "base.html" %}
+{% load static %}
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'home/css/styl.css' %}">
+{% endblock extra_headers %}
 {% block content %}
-{% for post in posts %}
-<div class="d-flex justify-content-center row row-cols-1 row-cols-md-3 g-4 text-center cols-center ">
-    <div class="col">
-        <div class="card" >
-            <div class="card-body d-flex justify-content-start ">
-                <img src="{{ post.user.profile.url }}"  style="border-radius: 50%;" alt="..." width="50" height="50">
-                <h5 class=" m-2 card-title"><a href="{% url "accounts:user_profile" post.user.id %}">{{ post.user }}</a></h5>
-            </div>
-            <img src="{{ post.image.url }}" class="card-img-top" alt="..." width="300" height="600">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <a href="{% url "home:user_like" post.id %}" class="text-start" style="text-decoration: none; color:black;"> 
-                        {% if  post.id not in can_like  %}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-                        </svg>
-                        {% else %}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
-                        </svg>
-                        {% endif %}
-                    </a>
-                    
-
-                    <a href="{% url "home:save" post.id %}" style="text-decoration: none; color:black;"> 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
-                        </svg>
-                    </a>
-
+<div class="container my-4">
+    <div class="row justify-content-center">
+        {% for post in posts %}
+        <div class="col-12 col-sm-6 col-md-4 mb-4">
+            <div class="card h-100">
+                <!-- بخش کاربر -->
+                <div class="card-body d-flex align-items-center">
+                    <img src="{{ post.user.profile.url }}" class="rounded-circle" alt="..." width="50" height="50">
+                    <h5 class="ms-3 card-title mb-0">
+                        <a href="{% url 'accounts:user_profile' post.user.id %}" style="text-decoration: none;">{{ post.user }}</a>
+                    </h5>
                 </div>
-                <p class="card-text">{{ post.caption }}</p>
+
+                <!-- تصویر پست -->
+                <div class="post-image-container">
+                    <img src="{{ post.image.url }}" class="post-image" alt="Post Image">
+                </div>
+
+                <!-- بخش لایک و ذخیره -->
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="{% url 'home:user_like' post.id %}" class="text-start" style="text-decoration: none; color:black;">
+                            {% if post.id not in can_like %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                            </svg>
+                            {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                            </svg>
+                            {% endif %}
+                        </a>
+
+                        <a href="{% url 'home:save' post.id %}" style="text-decoration: none; color:black;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- توضیحات پست -->
+                    <p class="card-text">{{ post.caption }}</p>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
-<br/>
-{% endfor %}
-
 {% endblock content %}

@@ -10,3 +10,19 @@
     margin-bottom:20px;
     background-color:#e9ecef;
 } */
+
+.navbar-nav .nav-link {
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+    color: #fff; /* رنگ متن */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ff007f; /* رنگ متن در حالت hover */
+}
+
+/* برای دکمه‌های mobile */
+.navbar {
+    box-shadow: 0 -1px 5px rgba(0,0,0,0.2);
+    }

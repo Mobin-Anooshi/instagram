@@ -1,9 +1,75 @@
 {% extends "base.html" %}
-{% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="send">
-</form>
+{% load static %}
+{% load crispy_forms_tags %}
 
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}">
+{% endblock extra_headers %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Edit Profile</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3 text-center">
+                            <!-- نمایش تصویر پروفایل -->
+                            {% if user.profile %}
+                                <img src="{{ user.profile.url }}" alt="Profile Picture" class="rounded-circle" width="150" height="150">
+                            {% else %}
+                                <img src="{% static 'images/default_profile.png' %}" alt="Default Profile" class="rounded-circle" width="150" height="150">
+                            {% endif %}
+                        </div>
+
+                        <!-- فیلدهای فرم -->
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            {{ form.username|as_crispy_field }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label">Full Name</label>
+                            {{ form.full_name|as_crispy_field }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="{{ user.email }}" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            {{ form.bio|as_crispy_field }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="birthday" class="form-label">Birthday</label>
+                            {{ form.birthday|as_crispy_field }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="privet" class="form-label">Private Account</label>
+                            {{ form.privet|as_crispy_field }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="profile" class="form-label">Change Profile Picture</label>
+                            {{ form.profile|as_crispy_field }}
+                        </div>
+
+                        <!-- دکمه ارسال -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

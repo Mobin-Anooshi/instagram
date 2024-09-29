@@ -1,33 +1,68 @@
 {% extends "base.html" %}
-{% load static %}
-{% block extra_headers %}
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-<link rel="stylesheet" href="{% static 'accounts/css/styles.css' %}">
-{% endblock extra_headers %}
-
 {% block content %}
+<style>
+    /* پس‌زمینه سفید ساده */
+    body {
+        background-color: #f8f9fa;
+    }
 
-<div class="wrapper">
-<form method="post" action="">
-    {% csrf_token %}
-    <h1>Login</h1>
-    <div class="input-box">
-    {{ form.username }}
-    <i class='bx bxs-user'></i>
+    /* مرکز کردن فرم لاگین در صفحه */
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* اضافه کردن سایه برای ظاهر جذاب‌تر */
+        border-radius: 10px; /* گرد کردن گوشه‌های کارت */
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        border-radius: 20px;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    /* تغییر رنگ لینک */
+    .form-link a {
+        color: #007bff;
+    }
+</style>
+
+<div class="container login-container">
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Login</h3>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        {{ form.username }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        {{ form.password }}
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+
+                    <div class="form-link mt-3 text-center">
+                        <p>Don't have an account? <a href="{% url 'accounts:user_register' %}">Register here</a></p>
+                    </div>
+
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="input-box">
-    {{ form.password }}
-    <i class='bx bxs-lock-alt' ></i>
-    </div>
-    <div class="remember-forgot">
-    <label><input type="checkbox">Remember Me</label>
-    <a href="#">Forgot Password</a>
-    </div>
-    <button type="submit" class="btn">Login</button>
-    <div class="register-link">
-    <p>Dont have an account? <a href="{% url "accounts:user_register" %}">Register</a></p>
-    </div>
-</form>
 </div>
-
 {% endblock content %}

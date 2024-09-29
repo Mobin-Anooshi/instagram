@@ -1,0 +1,22 @@
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* سایه زیبا برای کارت */
+    border-radius: 10px; /* لبه‌های گرد */
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.card-img-top {
+    max-height: 600px; /* محدودیت ارتفاع برای تصاویر بزرگ */
+    object-fit: cover;  /* بریدن تصویر به‌صورت متناسب */
+}
+
+.text-dark:hover {
+    text-decoration: none; /* حذف زیرخط هنگام هاور روی لینک */
+}
+
+img {
+    max-width: 100%; /* واکنش‌گرا کردن تصویر پروفایل */
+    height: auto;
+}

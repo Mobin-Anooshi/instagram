@@ -1,0 +1,6 @@
+.fixed-size-image {
+    width: 300px;
+    height: 300px;
+    object-fit: cover; /* برای برش دادن تصویر و نمایش متناسب با فضای 300x300 */
+    border-radius: 10px; /* اختیاری: گوشه‌های گرد برای زیباتر کردن تصاویر */
+}
