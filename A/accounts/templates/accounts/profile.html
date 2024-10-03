@@ -29,23 +29,26 @@
     </div>
 
     <!-- دکمه Follow / Unfollow -->
-    <div class="row justify-content-center">
-        <div class="col-12 text-center my-3">
-            {% if request.user.id != user.id %}
-                {% if user.privet %}
+    {% if request.user.id != user.id %}
+        <div class="row justify-content-center">
+            <div class="col-12 text-center my-3">
                     {% if is_follow %}
-                    <a href="{% url "home:user_relations" user.id %}" class="btn btn-danger">UnFollow</a>
+                        <a href="{% url 'home:user_relations' user.id %}" class="btn btn-danger">UnFollow</a>
                     {% else %}
-                    {% if is_request %}
-                    <a href="{% url "home:user_request" user.id %}" class="btn btn-info">Request</a>
-                    {% else %}
-                    <a href="{% url "home:user_request" user.id %}" class="btn btn-info">Follow</a>
+                        {% if user.privet  %}
+                            {% if is_request %}
+                                <a href="{% url 'home:user_request' user.id %}" class="btn btn-info">Request</a>
+                            {% else %}
+                                <a href="{% url 'home:user_request' user.id %}" class="btn btn-info">Follow</a>
+                            {% endif %}
+                        {% else %}
+                                <a href="{% url 'home:user_relations' user.id %}" class="btn btn-info">Follow</a>
+                        {% endif %}
                     {% endif %}
-                    {% endif %}
-                {% endif %}
-            {% endif %}
+
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <!-- نمایش پست‌ها -->
     <div class="row">
@@ -73,7 +76,7 @@
             </div>
             <div class="modal-body">
                 {% for rel in followers %}
-                <p>{{ rel.from_user }}</p>
+                <p><a href="{% url 'accounts:user_profile' rel.from_user.id %}">{{ rel.from_user }}</a></p>
                 {% endfor %}
             </div>
             <div class="modal-footer">

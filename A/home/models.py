@@ -47,6 +47,8 @@ class Relations(models.Model):
     
     def __str__(self):
         return f'{self.from_user} follow {self.to_user}'
+
+
     
 class UserRequest(models.Model):
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_requests')

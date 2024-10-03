@@ -1,7 +1,8 @@
+from django.core.signals import request_started
 from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
-from accounts.models import User
-from accounts.forms import UserRegistertionForm,UserLoginForm,UserEditProfileForm
+from .models import User
+from .forms import UserRegistertionForm,UserLoginForm,UserEditProfileForm
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -35,21 +36,21 @@ class UserLoginView(View):
     form_class = UserLoginForm
     template_name = 'accounts/login.html'
     
-    def get(self,requst):
+    def get(self,request):
         form = self.form_class
-        return render(requst , self.template_name,{'form':form})
+        return render(request , self.template_name,{'form':form})
     
-    def post(self,requst):
-        form =self.form_class(requst.POST)
+    def post(self,request):
+        form =self.form_class(request.POST)
         if form.is_valid():
             cd = form.cleaned_data        
-            user = authenticate(requst , username=cd['username'],password=cd['password'])
+            user = authenticate(request , username=cd['username'],password=cd['password'])
             if user is not None:
-                login(requst,user)
-                messages.success(requst,'login','success')
+                login(request,user)
+                messages.success(request,'login','success')
                 return redirect('home:home')
-            messages.error(requst,'username or password is wrong','danger')
-        return render(requst,self.template_name,{'form':form})
+            messages.error(request,'username or password is wrong','danger')
+        return render(request,self.template_name,{'form':form})
 
 class UserLogoutView(LoginRequiredMixin,View):
     
@@ -62,20 +63,25 @@ class UserProfileView(LoginRequiredMixin,View):
     def get(self,request,user_id):
         user = get_object_or_404(User , pk=user_id)
         follow = Relations.objects.filter(from_user = request.user.id,to_user=user)
-        print(follow)
+        print('-'*99)
         followers = Relations.objects.filter(to_user=user_id)
         following = Relations.objects.filter(from_user=user_id)
         posts = Post.objects.filter(user=user_id)
         re = UserRequest.objects.filter(from_user = request.user.id,to_user=user)
-        
         is_request =False
         if re.exists():
             is_request=True
         is_follow = False
         if follow.exists():
             is_follow=True
-
-        return render(request , 'accounts/profile.html',{'user':user,'posts':posts,'is_follow':is_follow,'followers':followers,'following':following,'is_request':is_request})
+        context = {'user':user,
+                        'posts':posts,
+                        'is_follow':is_follow,
+                        'followers':followers,
+                        'following':following,
+                        'is_request':is_request}
+        print(context)
+        return render(request , 'accounts/profile.html',context)
     
 class UserEditeProfileView(LoginRequiredMixin,View):
     form_class = UserEditProfileForm
