@@ -1,5 +1,3 @@
-from typing import Any
-from django.http import HttpRequest
 from django.shortcuts import render , get_object_or_404,redirect
 from django.views import View
 from .models import Post,Vote,SaveMessage,UserMessage,Relations,UserRequest
@@ -13,12 +11,13 @@ from utils import user_like
 # Create your views here.
 
 
-class HomeView(LoginRequiredMixin,View):
+class HomeView(View):
     def get(self,request):
-        posts =Post.objects.filter(user__privet=False,) | Post.objects.filter(user__following__from_user=request.user) | Post.objects.filter(user=request.user)
         can_like = None
-        if request.user.is_authenticated :
-            can_like =user_like(request.user)
+        posts = Post.objects.filter(user__privet=False)
+        if request.user.is_authenticated:
+            posts =Post.objects.filter(user__privet=False,) | Post.objects.filter(user__following__from_user=request.user) | Post.objects.filter(user=request.user)
+            can_like = user_like(request.user)
         return render(request , 'home/index.html',{'posts':posts,'can_like':can_like})
 
     

@@ -1,13 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
-from accounts.managers import UserManager
+from .managers import UserManager
 # Create your models here.
 
 
 
 class User(AbstractBaseUser):
     username = models.CharField(max_length=200,unique=True)
-    profile = models.ImageField(upload_to='profile_image',default='nafir.jpg')
+    profile = models.ImageField(upload_to='profile_image',default='blank-profile-picture.png')
     bio = models.CharField(max_length=300,blank=True ,null=True)
     full_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255,unique=True)

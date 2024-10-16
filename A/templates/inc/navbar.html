@@ -35,6 +35,9 @@
                 </a>
             </li>
         </ul>
+        {% else %}
+            <a class="navbar-brand" href="{% url 'accounts:user_login' %}">Login</a>
+
         {% endif %}
     </div>
 </nav>
@@ -69,6 +72,8 @@
                 </a>
             </li>
         </ul>
+        {% else %}
+            <a class="navbar-brand" href="{% url 'accounts:user_login' %}">Login</a>
         {% endif %}
     </div>
 </nav>
